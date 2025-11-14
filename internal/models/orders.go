@@ -2,7 +2,7 @@ package models
 
 type UpdateOrderRequest struct {
 	OrderName        string  `json:"orderName" binding:"required"`
-	OrderID          string  `json:"orderId" binding:"required"`
+	OrderID          int     `json:"orderId" binding:"required"`
 	ValidateStatus   string  `json:"validateStatus"`
 	Amount           float64 `json:"amount"`
 	LogisticValidate bool    `json:"logisticValidate"`

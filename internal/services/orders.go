@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 
@@ -75,7 +77,7 @@ func (s *ordersService) UpdateManualOrder(
 	}
 
 	if req.ValidateStatus == "COMPLETED" {
-		errDB := s.shopifyRepo.MarkOrderAsPaid(ctx, req.OrderID)
+		errDB := s.shopifyRepo.MarkOrderAsPaid(ctx, fmt.Sprintf("%d", req.OrderID))
 		if errDB != nil {
 			s.logger.Error("failed to mark order as paid in Shopify", zap.Error(errDB))
 			return errDB

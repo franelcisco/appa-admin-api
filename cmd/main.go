@@ -79,7 +79,7 @@ func main() {
 		logger.Fatal("could not load Venezuela time zone", zap.Error(err))
 	}
 
-	router := gin.New()
+	router := gin.Default()
 	router.Use(gin.Recovery())
 
 	router.GET("/", func(c *gin.Context) { c.String(200, "ok") })
@@ -120,15 +120,19 @@ func main() {
 
 	// init Services
 	orderService := services.NewOrdersService(gormDB, shopifyRepo, logger)
+	loginService := services.NewLoginService(logger, firebaseApp, gormDB)
 
 	// init handlers
 	orderHandler := handlers.NewOrdersHandler(orderService, bcvClient)
+	loginHander := handlers.NewLoginHandler(loginService, cfg.Debug)
 
 	// init routes
 	orderRoutes := routes.NewOrdersRoutes(orderHandler, AuthMiddleware)
+	loginRoutes := routes.NewLoginRoutes(loginHander, AuthMiddleware)
 
 	// set routes
 	orderRoutes.SetRouter(router)
+	loginRoutes.SetRouter(router)
 
 	if err := router.Run(":" + cfg.Port); err != nil {
 		logger.Fatal(err.Error(), zap.Any("port", cfg.Port))

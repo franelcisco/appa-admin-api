@@ -32,7 +32,6 @@ func NewClient(loc *time.Location, logger *zap.Logger) (Client, error) {
 
 	_, err := client.Get(context.Background())
 	if err != nil {
-		logger.Error("error initializing BCV client", zap.Error(err))
 		return nil, err
 	}
 
@@ -48,7 +47,7 @@ func (c *client) Get(ctx context.Context) (float64, error) {
 	// If BCVTasa is nil or the date is not today, fetch a new rate
 	rate, err := c.fetchRate()
 	if err != nil {
-		c.logger.Error(err.Error())
+		c.logger.Error("error fetching BCV rate", zap.Error(err))
 		return 0.0, err
 	}
 
@@ -58,6 +57,7 @@ func (c *client) Get(ctx context.Context) (float64, error) {
 	}
 
 	if rate == 0 {
+		c.logger.Error("no exchange rate found on BCV page")
 		return 0, fmt.Errorf("no exchange rate found on BCV page")
 	}
 	return rate, nil
