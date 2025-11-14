@@ -27,15 +27,9 @@ type Config struct {
 	ShopifyAPIVersion string
 	ShopifyAdminToken string
 	ShopifyStoreName  string
-	ShopifyHMACSecret string
 
 	// CORS
 	CORSAllowedOrigins []string
-
-	// R4 API credentials
-	R4EntryPoint   string
-	R4APIEcommerce string
-	R4Secret       string
 }
 
 // Load reads configuration from environment variables and returns a Config struct
@@ -67,13 +61,8 @@ func Load() (*Config, error) {
 		ShopifyAPIVersion: os.Getenv("SHOPIFY_API_VERSION"),
 		ShopifyAdminToken: os.Getenv("SHOPIFY_ADMIN_TOKEN"),
 		ShopifyStoreName:  os.Getenv("SHOPIFY_STORE_NAME"),
-		ShopifyHMACSecret: os.Getenv("SHOPIFY_HMAC_SECRET"),
 
 		CORSAllowedOrigins: corsOrigins,
-
-		R4EntryPoint:   os.Getenv("R4_ENTRY_POINT"),
-		R4APIEcommerce: os.Getenv("R4_API_ECOMMERCE"),
-		R4Secret:       os.Getenv("R4_SECRET"),
 	}
 
 	if err := validate(cfg); err != nil {
@@ -120,19 +109,6 @@ func validate(cfg *Config) error {
 	}
 	if cfg.ShopifyStoreName == "" {
 		return fmt.Errorf("ShopifyStoreName is not configured")
-	}
-	if cfg.ShopifyHMACSecret == "" {
-		return fmt.Errorf("ShopifyHMACSecret is not configured")
-	}
-
-	if cfg.R4EntryPoint == "" {
-		return fmt.Errorf("R4EntryPoint is not configured")
-	}
-	if cfg.R4APIEcommerce == "" {
-		return fmt.Errorf("R4APIEcommerce is not configured")
-	}
-	if cfg.R4Secret == "" {
-		return fmt.Errorf("R4 Secret is not configured")
 	}
 
 	return nil
