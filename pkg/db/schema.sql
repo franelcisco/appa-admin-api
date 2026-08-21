@@ -15,6 +15,8 @@ CREATE TABLE public.appa_users
     CONSTRAINT appa_users_firebase_uid_key UNIQUE (firebase_uid),
     CONSTRAINT appa_users_email_key UNIQUE (email)
 );
+CREATE INDEX idx_appa_users_firebase_uid ON public.appa_users USING btree (firebase_uid);
+CREATE INDEX idx_appa_users_email ON public.appa_users USING btree (email);
 
 -- public.payments_methods definition
 -- Drop table
